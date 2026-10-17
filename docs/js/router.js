@@ -1,21 +1,40 @@
 import { routes } from "./routes.js";
+import { t } from "./i18n/i18n.js";
 
 export function initRouter() {
-  window.addEventListener("hashchange", handleRoute);
-  window.addEventListener("load", handleRoute);
-}
+  function renderRoute() {
+    const app = document.getElementById("app");
+    if (!app) return;
 
-function handleRoute() {
-  const hash = window.location.hash.slice(1) || "/";
-  const renderPage = routes[hash] || routes["404"];
+    const currentRoute = window.location.hash || "#/overview";
+    const renderPage = routes[currentRoute];
 
-  const appContainer = document.getElementById("app");
-  if (appContainer) {
-    appContainer.innerHTML = "";
-    renderPage(appContainer);
+    if (typeof renderPage === "function") {
+      app.innerHTML = renderPage();
+      return;
+    }
+
+    // Цэс бүрийн тайлбар
+    const pageKeys = {
+      "#/overview": "overview",
+      "#/search": "search",
+      "#/calculation": "calculation",
+      "#/books": "books",
+      "#/contact": "contact",
+    };
+
+    const pageKey = pageKeys[currentRoute] || "overview";
+
+    app.innerHTML = `
+      <section class="section">
+        <div class="container">
+          <h1 class="title">${t(`${pageKey}.title`)}</h1>
+          <p>${t(`${pageKey}.welcome`)}</p>
+        </div>
+      </section>
+    `;
   }
-}
 
-export function navigateTo(path) {
-  window.location.hash = path;
+  window.addEventListener("hashchange", renderRoute);
+  renderRoute();
 }

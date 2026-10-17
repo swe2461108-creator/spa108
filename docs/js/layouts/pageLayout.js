@@ -1,18 +1,12 @@
-import { renderNavbar } from "../components/navbar.js";
-import { renderFooter } from "../components/footer.js";
-
-export function renderPageLayout(contentHtml) {
+export function renderPageLayout({ id, title, content }) {
   return `
-    ${renderNavbar()}
-    <main class="section">
+    <section id="${id}" class="section">
       <div class="container">
-        ${contentHtml}
+        <h1 class="title">${title}</h1>
+        <div class="content">
+          ${content}
+        </div>
       </div>
-    </main>
-    ${renderFooter()}
+    </section>
   `;
-}
-
-export function initPageLayout() {
-  initNavbar();
 }

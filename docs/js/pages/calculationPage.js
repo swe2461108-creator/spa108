@@ -1,13 +1,12 @@
 import { renderPageLayout } from "../layouts/pageLayout.js";
+import { t } from "../i18n/i18n.js";
 
 export function renderCalculationPage() {
-  const app = document.getElementById("app");
-
-  app.innerHTML = renderPageLayout({
+  return renderPageLayout({
     id: "calculation",
-    title: "Calculation",
+    title: t("calculation.title"),
     content: `
-      <p>Welcome to the Calculation page.</p>
+      <p>${t("calculation.welcome")}</p>
     `,
   });
 }
