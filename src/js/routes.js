@@ -6,10 +6,11 @@ import { renderContactPage } from "./pages/contactPage.js";
 import { renderNotFoundPage } from "./pages/notFoundPage.js";
 
 export const routes = {
-  "#/overview": renderOverviewPage,
-  "#/search": renderSearchPage,
-  "#/calculation": renderCalculationPage,
-  "#/books": renderBooksPage,
-  "#/contact": renderContactPage,
-  "#/404": renderNotFoundPage,
+  "/": renderOverviewPage,
+  "/overview": renderOverviewPage,
+  "/search": renderSearchPage,
+  "/calculation": renderCalculationPage,
+  "/books": renderBooksPage,
+  "/contact": renderContactPage,
+  404: renderNotFoundPage,
 };

@@ -1,21 +1,21 @@
-export function initRouter(routes) {
-  function renderRoute() {
-    const hash = window.location.hash || "#/overview";
-    const page = routes[hash];
+import { routes } from "./routes.js";
 
-    if (page) {
-      page();
-    } else {
-      const notFound = routes["#/404"];
-      if (notFound) {
-        notFound();
-      }
-    }
+export function initRouter() {
+  window.addEventListener("hashchange", handleRoute);
+  window.addEventListener("load", handleRoute);
+}
+
+function handleRoute() {
+  const hash = window.location.hash.slice(1) || "/";
+  const renderPage = routes[hash] || routes["404"];
+
+  const appContainer = document.getElementById("app");
+  if (appContainer) {
+    appContainer.innerHTML = "";
+    renderPage(appContainer);
   }
+}
 
-  // Хуудас анх ачаалагдахад renderRoute() ажиллана
-  window.addEventListener("load", renderRoute);
-
-  // URL-ийн # хэсэг өөрчлөгдөх бүрд renderRoute() дахин ажиллана
-  window.addEventListener("hashchange", renderRoute);
+export function navigateTo(path) {
+  window.location.hash = path;
 }
