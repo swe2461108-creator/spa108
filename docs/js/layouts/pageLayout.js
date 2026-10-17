@@ -1,4 +1,4 @@
-import { renderNavbar, initNavbar } from "../components/navbar.js";
+import { renderNavbar } from "../components/navbar.js";
 import { renderFooter } from "../components/footer.js";
 
 export function renderPageLayout(contentHtml) {
