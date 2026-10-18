@@ -1,8 +1,7 @@
-import { getNutritions } from "../services/nutritionService.js";
+import { getNutritions } from "../services/nutritionService.js"; // Хоолны шим тэжээлийн өгөгдлийг авна.
+import { buildFoodGroups, bindSearchEvents, renderDefaultTables, initNutritionData } from "../fn/foodSearchEvents.js"; // food_group бүрээр багцалсан food_code, food_name-үүдийг авна. Жишээ нь: "Cereals and Cereal products" → [{ food_code: "01_0106", food_name: "Barley flour, whole grain" }, ...]
 
-import { buildFoodGroups, bindSearchEvents, renderDefaultTables, initNutritionData } from "../fn/foodSearchEvents.js";
-
-import { renderSidebarPageLayout } from "../layouts/sidebarPageLayout.js";
+import { renderSidebarPageLayout } from "../layouts/sidebarPageLayout.js"; // Sidebar-тай хуудасны layout-г үүсгэх
 import { bindSidebar, bindMenuListToggle } from "../fn/sidebarEvents.js";
 
 import { renderPageLayout } from "../layouts/pageLayout.js";
@@ -12,6 +11,11 @@ import { renderSearchFoodName } from "../components/searchFoodNameSidebar.js";
 import { renderSearchSettings } from "../components/searchSettingsSidebar.js";
 import { renderFoodGroupList } from "../components/searchFoodGroupListSidebar.js";
 
+import { loadImages } from "../services/imageService.js";
+import { renderImageModal, bindImageModalEvents } from "../components/imageModal.js";
+
+let imageModalBound = false;
+
 export async function renderSearchPage() {
   const app = document.getElementById("app");
 
@@ -20,47 +24,35 @@ export async function renderSearchPage() {
   });
 
   try {
-    // JSON өгөгдлийг нэг л удаа татна
-    const nutritionData = await getNutritions();
-
-    console.log("JSON data:", nutritionData);
-    console.log("Data count:", nutritionData.length);
-
-    // Өгөгдлийг хайлтын функцэд хадгална
+    const nutritionData = await getNutritions(); // Хүнсний найрлагын JSON өгөгдүүдлийг авна.
+    await loadImages(); // Зургийн JSON өгөгдлийг ачаална.
     initNutritionData(nutritionData);
+    const groupedFoods = buildFoodGroups(nutritionData); // food_group бүрээр багцалсан food_code, food_name-үүдийг авна. Жишээ нь: "Cereals and Cereal products" → [{ food_code: "01_0106", food_name: "Barley flour, whole grain" }, ...]
 
-    // Хүнсний бүлгүүдийг үүсгэнэ
-    const groupedFoods = buildFoodGroups(nutritionData);
-
-    // Эхний хүснэгтүүдийг үүсгэнэ
-    const defaultHtml = renderDefaultTables(nutritionData);
-
-    console.log("Default table HTML:", defaultHtml);
-
-    // Хуудсыг харуулна
-    app.innerHTML = renderSidebarPageLayout({
-      sidebarContent: `
-        ${renderSearchFoodName()}
-        ${renderSearchSettings()}
-        ${renderFoodGroupList(groupedFoods)}
-      `,
-      pageId: "search",
-      pageTitle: "Food Composition Database",
-      mainContent: `
-        <div id="resultTbl">
-          ${defaultHtml}
-        </div>
-      `,
-    });
+    app.innerHTML =
+      renderSidebarPageLayout({
+        sidebarContent: `${renderSearchFoodName()} ${renderSearchSettings()} ${renderFoodGroupList(groupedFoods)}`,
+        pageId: "search",
+        pageTitle: "Food Composition Database",
+        mainContent: `
+      <div id="resultTbl">
+        ${renderDefaultTables(nutritionData)}
+      </div>
+    `,
+      }) + renderImageModal();
 
     bindSidebar();
     bindMenuListToggle();
     bindSearchEvents();
-  } catch (error) {
-    console.error("Failed to load nutrition data:", error);
 
+    if (!imageModalBound) {
+      bindImageModalEvents();
+      imageModalBound = true;
+    }
+  } catch (error) {
     app.innerHTML = renderPageLayout({
-      content: renderNotification("Failed to load nutrition data. Please check the console.", "danger"),
+      content: renderNotification("Failed to load nutrition data.", "danger"),
     });
+    console.error("Failed to load nutrition data:", error);
   }
 }
