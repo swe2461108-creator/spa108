@@ -6,7 +6,7 @@ export const translations = {
       calculation: "Тооцоолуур",
       books: "Ном",
       contact: "Холбоо барих",
-      language: "MN",
+      language: "EN",
       brandSpan: "Монголын",
       brand: "хүнсний найрлагын мэдээллийн сан",
     },
@@ -14,24 +14,80 @@ export const translations = {
       title: "Тойм",
       welcome: "Тойм хуудсанд тавтай морил.",
     },
-    search: {
-      title: "Хүнсний бүтээгдэхүүн хайх",
-      welcome: "Хүнсний бүтээгдэхүүний найрлагын мэдээллийг хайна уу.",
+    searchPage: {
+      title: "Хүнс хайх",
     },
-    calculation: {
-      title: "Хүнсний тооцоолуур",
-      welcome: "Хүнсний бүтээгдэхүүний шим тэжээлийг тооцоолно уу.",
+    sidebar: {
+      searchByFoodName: "Хүнсний нэрээр хайх",
+      foodName: "Хүнсний нэр",
+      searchButton: "Хайх",
+
+      searchSettings: "Хайх тохиргоо",
+      nutritions: "Шим тэжээл",
+      proximates: "Илчлэг, үндсэн шимт бодис",
+      minerals: "Эрдэс бодис",
+      vitamins: "Амин дэм",
+      sampleInformations: "Дээжийн мэдээлэл",
+      collection_information: "Цуглуулсан мэдээлэл",
+      edible_inedible_part: "Идэх идэхгүй хэсэг",
+      pretreatment_conditions: "Боловсруулалт",
+      description: "Тайлбар",
+      images: "Зураг",
+
+      searchByFoodGroups: "Хүнсний бүлгээр хайх",
     },
-    books: {
-      title: "Ном",
-      welcome: "Хүнс, шим тэжээлийн номтой танилцана уу.",
+    table: {
+      foodName: "Хүнсний нэр",
+      foodGroup: "Хүнсний бүлэг",
+      scientificName: "Шинжлэх ухааны нэр",
+      nativeName: "Монгол нэр",
+      province: "Аймаг",
+      description: "Тайлбар",
+      images: "Зураг",
+      numberOfImages: "Зургийн тоо",
+
+      "Collection area": "Дээж авсан газар",
+      "Collection date": "Огноо",
+      "Basis of sample selection": "Сонгосон үндэслэл",
+      "Additional collection information": "Нэмэлт мэдээлэл",
+
+      "Weight of whole part (g/1 piece)": "Бүтэн хэсгийн жин (г/1ш)",
+      "Weight of edible part (g/1 piece)": "Идэх хэсгийн жин (г/1ш)",
+      "Inedible part (discarded part)": "Идэхгүй хэсэг",
+      "Weight of inedible part (g/1 piece)": "Идэхгүй хэсгийн жин (г/1ш)",
+
+      "Cooking (processing) method": "Боловсруулах арга",
+      "Other cooking (processing) conditions": "Бусад боловсруулах нөхцөл",
+      "Reference for condition setting": "Нөхцөл тогтоосон үндэслэл",
     },
-    contact: {
-      title: "Холбоо барих",
-      welcome: "Дэлгэрэнгүй мэдээлэл авах бол бидэнтэй холбогдоно уу.",
+    nutrients: {
+      "Energy (kcal)": "Илчлэг (ккал)",
+      "Water (g)": "Ус (г)",
+      "Protein (g)": "Уураг (г)",
+      "Fat (g)": "Өөх тос (г)",
+      "Ash (g)": "Үнс (г)",
+      "Carbohydrate (g)": "Нүүрс ус (г)",
+
+      "Calcium (mg)": "Кальци (мг)",
+      "Iron (mg)": "Төмөр (мг)",
+      "Phosphorus (mg)": "Фосфор (мг)",
+      "Potassium (mg)": "Кали (мг)",
+      "Sodium (mg)": "Натри (мг)",
+
+      "Vitamin A (μg)": "А витамин (μг)",
+      "Thiamin (mg)": "Тиамин (мг)",
+      "Riboflavin (mg)": "Рибофлавин (мг)",
+      "Vitamin C (mg)": "С витамин (мг)",
+      "Refuse (%)": "Хаягдал (%)",
+    },
+    notification: {
+      noMatchFound: "Илэрц олдсонгүй.",
+      selectAtLeastOneCategory: "Ядаж нэг шим тэжээлийн ангилал сонгоно уу.",
+      enterFoodName: "Хүнсний нэр оруулна уу",
+      loadingData: "Өгөгдөл ачаалж байна...",
+      failedToLoadNutritionData: "Хүнсний найрлагын өгөгдөл ачаалахад алдаа гарлаа.",
     },
   },
-
   en: {
     nav: {
       overview: "Overview",
@@ -39,7 +95,7 @@ export const translations = {
       calculation: "Food Calculator",
       books: "Books",
       contact: "Contact us",
-      language: "EN",
+      language: "MN",
       brandSpan: "Mongolian",
       brand: "Food Composition Database",
     },
@@ -47,54 +103,78 @@ export const translations = {
       title: "Overview",
       welcome: "Welcome to the overview page.",
     },
-    search: {
-      title: "Search Food",
-      welcome: "Search food composition information.",
+    searchPage: {
+      title: "Food search",
     },
-    calculation: {
-      title: "Food Calculator",
-      welcome: "Calculate food nutrients.",
-    },
-    books: {
-      title: "Books",
-      welcome: "Explore food and nutrition books.",
-    },
-    contact: {
-      title: "Contact us",
-      welcome: "Contact us for more information.",
-    },
-  },
+    sidebar: {
+      searchByFoodName: "Search by food name",
+      foodName: "Food name",
+      searchButton: "Search",
 
-  ko: {
-    nav: {
-      overview: "개요",
-      search: "검색",
-      calculation: "식품 영양 계산기",
-      books: "도서",
-      contact: "문의하기",
-      language: "KO",
-      brandSpan: "몽골",
-      brand: "식품 성분 데이터베이스",
+      searchSettings: "Search settings",
+      nutritions: "Nutritions",
+      proximates: "Proximates",
+      minerals: "Minerals",
+      vitamins: "Vitamins",
+      sampleInformations: "Sample informations",
+      collection_information: "Collection Information",
+      edible_inedible_part: "Edible Inedible Part",
+      pretreatment_conditions: "Pretreatment Conditions",
+      description: "Description",
+      images: "Images",
+
+      searchByFoodGroups: "Search by food groups",
     },
-    overview: {
-      title: "개요",
-      welcome: "개요 페이지에 오신 것을 환영합니다.",
+    table: {
+      foodName: "Food name",
+      foodGroup: "Food group",
+      scientificName: "Scientific name",
+      nativeName: "Native name",
+      province: "Province",
+      description: "Description",
+      images: "Images",
+      numberOfImages: "Number of Images",
+
+      "Collection area": "Collection area",
+      "Collection date": "Collection date",
+      "Basis of sample selection": "Basis of sample selection",
+      "Additional collection information": "Additional collection information",
+
+      "Weight of whole part (g/1 piece)": "Weight of whole part (g/1 piece)",
+      "Weight of edible part (g/1 piece)": "Weight of edible part (g/1 piece)",
+      "Inedible part (discarded part)": "Inedible part (discarded part)",
+      "Weight of inedible part (g/1 piece)": "Weight of inedible part (g/1 piece)",
+
+      "Cooking (processing) method": "Cooking (processing) method",
+      "Other cooking (processing) conditions": "Other cooking (processing) conditions",
+      "Reference for condition setting": "Reference for condition setting",
     },
-    search: {
-      title: "식품 검색",
-      welcome: "식품 성분 정보를 검색하세요.",
+    nutrients: {
+      "Energy (kcal)": "Energy (kcal)",
+      "Water (g)": "Water (g)",
+      "Protein (g)": "Protein (g)",
+      "Fat (g)": "Fat (g)",
+      "Ash (g)": "Ash (g)",
+      "Carbohydrate (g)": "Carbohydrate (g)",
+
+      "Calcium (mg)": "Calcium (mg)",
+      "Iron (mg)": "Iron (mg)",
+      "Phosphorus (mg)": "Phosphorus (mg)",
+      "Potassium (mg)": "Potassium (mg)",
+      "Sodium (mg)": "Sodium (mg)",
+
+      "Vitamin A (μg)": "Vitamin A (μg)",
+      "Thiamin (mg)": "Thiamin (mg)",
+      "Riboflavin (mg)": "Riboflavin (mg)",
+      "Vitamin C (mg)": "Vitamin C (mg)",
+      "Refuse (%)": "Refuse (%)",
     },
-    calculation: {
-      title: "식품 영양 계산기",
-      welcome: "식품의 영양소를 계산하세요.",
-    },
-    books: {
-      title: "도서",
-      welcome: "식품 및 영양 관련 도서를 살펴보세요.",
-    },
-    contact: {
-      title: "문의하기",
-      welcome: "자세한 정보는 문의해 주세요.",
+    notification: {
+      noMatchFound: "No match found.",
+      selectAtLeastOneCategory: "Please select at least one nutrition category.",
+      enterFoodName: "Please enter a food name.",
+      loadingData: "Loading data...",
+      failedToLoadNutritionData: "Failed to load nutrition data.",
     },
   },
 };

@@ -1,84 +1,45 @@
 import { renderNotification } from "../layouts/notificationLayout.js";
 import { renderNutritionTables } from "../components/nutritionTables.js";
 import { nutritionGroups } from "../components/searchSettingsSidebar.js";
+import { getLocalizedValue, t } from "../i18n/i18n.js";
 
-// food_group бүрээр бүлэглэсэн food_code, food_name авна. Жишээ нь: "Cereals and Cereal products" → [{ food_code: "01_0106", food_name: "Barley flour, whole grain" }, ...]
+// food_group нь давхар үүрсэн байж болно: { en: { en, mn }, mn: "" }
+// Хэлнээс үл хамаарах текст түлхүүр буцаана.
+function getGroupKey(group) {
+  const en = group?.en;
+  const value = typeof en === "object" ? en?.en || en?.mn : en;
+  return value || "Other";
+}
+
+// food_group бүрээр бүлэглэсэн food_code, food_name авна.
+// Жишээ нь: "Cereals and Cereal products" → [{ food_code: "01_0106", food_name: "Barley flour, whole grain" }, ...]
 export function buildFoodGroups(data) {
-  const grouped = new Map(); // Map бол (key → value) хэлбэрээр өгөгдөл хадгалах бүтэц юм. grouped объект үүсгэв.
+  const grouped = new Map(); // (key → value) хэлбэрээр бүлгүүдийг хадгална.
 
   for (const item of data) {
-    const groupName = item.food_group || "Other";
+    const groupKey = getGroupKey(item.food_group);
 
-    if (!grouped.has(groupName)) {
-      grouped.set(groupName, new Map());
+    if (!grouped.has(groupKey)) {
+      grouped.set(groupKey, {
+        groupName: item.food_group,
+        items: new Map(),
+      });
     }
 
-    const groupItems = grouped.get(groupName);
-    groupItems.set(item.food_code, {
+    const groupData = grouped.get(groupKey);
+
+    groupData.items.set(item.food_code, {
       food_code: item.food_code,
       food_name: item.food_name,
     });
   }
 
-  return Array.from(grouped.entries()).map(([groupName, itemsMap]) => ({
-    groupName,
-    items: Array.from(itemsMap.values()).sort((a, b) => (a.food_name || "").localeCompare(b.food_name || "")),
+  return Array.from(grouped.values()).map((group) => ({
+    groupName: group.groupName,
+
+    items: Array.from(group.items.values()).sort((a, b) => getLocalizedValue(a.food_name).localeCompare(getLocalizedValue(b.food_name))),
   }));
 }
-/* Оролтын өгөгдөл:
-  const data = [
-    {
-      food_group: "Cereals and Cereal products",
-      food_code: "01_0106",
-      food_name: "Barley flour, whole grain",
-    },
-    {
-      food_group: "Cereals and Cereal products",
-      food_code: "01_0101",
-      food_name: "Rice",
-    },
-    {
-      food_group: "Vegetables",
-      food_code: "02_0001",
-      food_name: "Carrot",
-    },
-    {
-      food_group: "Vegetables",
-      food_code: "02_0002",
-      food_name: "Potato",
-    },
-  ];
-
-Функц food_group-ээр бүлэглэнэ. Гаралтын өгөгдөл:
-[
-  {
-    groupName: "Cereals and Cereal products",
-    items: [
-      {
-        food_code: "01_0106",
-        food_name: "Barley flour, whole grain",
-      },
-      {
-        food_code: "01_0101",
-        food_name: "Rice",
-      },
-    ],
-  },
-  {
-    groupName: "Vegetables",
-    items: [
-      {
-        food_code: "02_0001",
-        food_name: "Carrot",
-      },
-      {
-        food_code: "02_0002",
-        food_name: "Potato",
-      },
-    ],
-  },
-];
-*/
 
 let nutritionData = [];
 
@@ -86,14 +47,12 @@ export function initNutritionData(data) {
   nutritionData = data;
 }
 
-// const DEFAULT_TYPES = ["proximates", "minerals", "vitamins"];
-const DEFAULT_TYPES =
-  nutritionGroups
-    .find((group) => group.groupName === "Nutritions")
-    ?.items.filter((item) => item.checked)
-    .map((item) => item.value) || [];
+const DEFAULT_TYPES = nutritionGroups
+  .flatMap((group) => group.items)
+  .filter((item) => item.checked)
+  .map((item) => item.value);
 
-const DEFAULT_ITEM_COUNT = 4;
+const DEFAULT_ITEM_COUNT = 3;
 
 // UI дээрх бүх event (click, change, keydown)-уудыг холбож өгдөг функц
 export function bindSearchEvents() {
@@ -132,13 +91,13 @@ export function bindSearchEvents() {
 
 // Текст бичиж food_name-ээр хайх функц
 function handleTextSearch() {
-  clearCheckedFoodCodes(); // Хүнсний жагсаалтаас сонгож хайх checkbox-уудыг бүгдийг нь uncheck болгов.
+  clearCheckedFoodCodes(); // Хүнсний жагсаалтаас сонгосон checkbox-уудыг бүгдийг нь uncheck болгоно.
 
   const keyword = getSearchKeyword(); // input-ээс хайх текстийг авна.
 
   // Хайх үг хоосон бол анхааруулах мессеж харуулна.
   if (!keyword) {
-    setResultHtml(renderNotification("Please enter a food name."));
+    setResultHtml(renderNotification(t("notification.enterFoodName")));
     return;
   }
   renderCurrentResults();
@@ -165,14 +124,15 @@ function rerenderCurrentSelection() {
   renderCurrentResults();
 }
 
-// Хүнсний жагсаалтаас сонгосон checkbox-уудын food_code болон input-ээс авсан keyword хоёроор nutritionData-ыг шүүж харуулна. Хэрэв хоёулаа хоосон бол эхний 4 элементийг харуулна.
+// Сонгосон checkbox болон хайх текстээр шүүсэн үр дүнг хүснэгтээр харуулна.
 function renderCurrentResults() {
   const matched = getMatchedItems();
   const selectedTypes = getSelectedNutritionTypes();
   setResultHtml(renderNutritionTables(matched, selectedTypes));
 }
 
-// Хүнсний жагсаалтаас сонгосон checkbox-уудын food_code болон input-ээс авсан keyword хоёроор nutritionData-ыг шүүж харуулна. Хэрэв хоёулаа хоосон бол эхний 4 элементийг харуулна.
+// Хүнсний жагсаалтаас сонгосон checkbox-уудын food_code болон input-ээс авсан keyword хоёроор nutritionData-г шүүнэ.
+// Хоёулаа хоосон бол эхний DEFAULT_ITEM_COUNT элементийг буцаана.
 function getMatchedItems() {
   const selectedCodes = getSelectedFoodCodes();
   const keyword = getSearchKeyword();
@@ -182,7 +142,19 @@ function getMatchedItems() {
   }
 
   if (keyword) {
-    return nutritionData.filter((item) => (item.food_name || "").toLowerCase().includes(keyword));
+    // 2-оос бага тэмдэгт бол хайхгүй
+    if (keyword.length < 2) {
+      return [];
+    }
+
+    return nutritionData.filter((item) => {
+      const foodName = getLocalizedValue(item.food_name).toLowerCase();
+
+      // Үгээр хайх
+      const words = foodName.split(/\s+/);
+
+      return words.some((word) => word.startsWith(keyword));
+    });
   }
 
   return nutritionData.slice(0, DEFAULT_ITEM_COUNT);
@@ -193,24 +165,24 @@ function getSearchKeyword() {
   return document.getElementById("searchTxt")?.value.trim().toLowerCase() || "";
 }
 
-// Хүнсний жагсаалтаас сонгосон checkbox-уудын food_code утгуудыг массив хэлбэрээр авна. Жишээ нь: ["01_0106", "01_0107", ...]
+// Сонгосон checkbox-уудын food_code утгуудыг массив хэлбэрээр авна. Жишээ нь: ["01_0106", "01_0107", ...]
 function getSelectedFoodCodes() {
   return Array.from(document.querySelectorAll('input[name="foodcode"]:checked')).map((checkbox) => checkbox.value);
 }
 
-// nutrition category-ээс сонгосон бүх checkbox-уудын утгыг авна. Жишээ нь: proximates, minerals, vitamins гэх мэт.
+// nutrition category-ээс сонгосон checkbox-уудын утгыг авна. Жишээ нь: proximates, minerals, vitamins гэх мэт.
 function getSelectedNutritionTypes() {
   return Array.from(document.querySelectorAll('input[name="nutrition"]:checked')).map((checkbox) => checkbox.value);
 }
 
-// Хүнсний жагсаалтаас сонгож хайх checkbox-уудыг бүгдийг нь uncheck болгох функц.
+// Хүнсний жагсаалтаас сонгосон checkbox-уудыг бүгдийг нь uncheck болгох функц.
 function clearCheckedFoodCodes() {
   document.querySelectorAll('input[name="foodcode"]:checked').forEach((checkbox) => {
     checkbox.checked = false;
   });
 }
 
-// // Үр дүн харуулах хэсэг рүү HTML-ийг гаргана.
+// Үр дүн харуулах хэсэг рүү HTML-ийг гаргана.
 function setResultHtml(html) {
   const resultTbl = document.getElementById("resultTbl");
   if (resultTbl) {
@@ -218,7 +190,7 @@ function setResultHtml(html) {
   }
 }
 
-// Эхний 4 элементийг харуулж байна. DEFAULT_ITEM_COUNT = 4. DEFAULT_TYPES = ["proximates", "minerals", "vitamins"] гэсэн nutrition category-үүдийг харуулж байна.
+// Эхний DEFAULT_ITEM_COUNT элементийг DEFAULT_TYPES nutrition category-уудтайгаар харуулна.
 export function renderDefaultTables(data) {
   const defaultItems = data.slice(0, DEFAULT_ITEM_COUNT);
   return renderNutritionTables(defaultItems, DEFAULT_TYPES);
