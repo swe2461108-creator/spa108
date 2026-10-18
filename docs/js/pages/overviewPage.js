@@ -1,8 +1,15 @@
-import { renderPageLayout } from "../layouts/pageLayout.js";
 import { t } from "../i18n/i18n.js";
+import { renderPageLayout } from "../layouts/pageLayout.js";
 
 export function renderOverviewPage() {
-  return renderPageLayout({
+  const app = document.getElementById("app");
+
+  if (!app) {
+    console.error("app элемент олдсонгүй!");
+    return;
+  }
+
+  app.innerHTML = renderPageLayout({
     id: "overview",
     title: t("overview.title"),
     content: `

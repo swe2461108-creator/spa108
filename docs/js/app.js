@@ -1,5 +1,6 @@
-import { renderNavbar, initNavbar } from "./components/Navbar.js";
+import { renderNavbar, initNavbar } from "./components/navbar.js";
 import { initRouter } from "./router.js";
+import { routes } from "./routes.js"; // <-- routes-ийг импортолж оруулна
 
 const navbarRoot = document.getElementById("navbar");
 
@@ -8,4 +9,5 @@ if (navbarRoot) {
   initNavbar();
 }
 
-initRouter();
+// routes замуудыг Router руу дамжуулж ажиллуулна
+initRouter(routes);
