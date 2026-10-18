@@ -1,0 +1,86 @@
+/* 1. Хоёр баганат бүтэц */
+.app-shell {
+  display: flex;
+  align-items: flex-start;
+}
+
+/* 2. Зүүн сайдбар */
+.app-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 1.25rem 1rem;
+  background: #fff;
+  border-right: 1px solid #eee;
+}
+
+/* 3. Баруун агуулга */
+.app-main-content {
+  flex: 1;
+  min-width: 0;
+  padding: 2rem 3rem;
+}
+
+/* 4. Гарчиг + улбар шар зураас */
+.app-title {
+  font-size: 2.75rem;
+  font-weight: 800;
+  color: #363a4f;
+  margin-bottom: 0.4rem;
+}
+
+.app-line {
+  width: 64px;
+  height: 3px;
+  background: #f08a3c;
+  margin-bottom: 2rem;
+}
+
+/* 5. Desktop дээр mobile товчнуудыг нууна */
+.app-mobile-sidebar,
+.app-sidebar-mobile-head,
+.app-sidebar-overlay {
+  display: none;
+}
+
+/* 6. Хүснэгт өргөн бол гүйлгэнэ */
+#resultTbl {
+  overflow-x: auto;
+}
+
+/* 7. Mobile: сайдбар нуугдаж, ↪ товчоор нээгдэнэ */
+@media (max-width: 1023px) {
+  .app-mobile-sidebar {
+    display: block;
+    padding: 0.5rem 1rem;
+  }
+  .app-sidebar-mobile-head {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .app-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+  .app-sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .app-sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: rgba(0, 0, 0, 0.4);
+  }
+  .app-sidebar-overlay.is-open {
+    display: block;
+  }
+}

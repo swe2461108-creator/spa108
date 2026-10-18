@@ -1,9 +1,7 @@
 import { renderNavbar, initNavbar } from "./components/navbar.js";
 import { initRouter } from "./router.js";
-import { routes } from "./routes.js"; // <-- routes-ийг импортолж оруулна
-import { renderSearchPage } from "./pages/searchPage.js";
+import { routes } from "./routes.js";
 
-await renderSearchPage();
 const navbarRoot = document.getElementById("navbar");
 
 if (navbarRoot) {
@@ -11,5 +9,5 @@ if (navbarRoot) {
   initNavbar();
 }
 
-// routes замуудыг Router руу дамжуулж ажиллуулна
+// Router нь анхны render болон hashchange хоёрыг хоёуланг нь хариуцна
 initRouter(routes);

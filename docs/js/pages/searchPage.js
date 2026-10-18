@@ -1,78 +1,66 @@
 import { getNutritions } from "../services/nutritionService.js";
 
+import { buildFoodGroups, bindSearchEvents, renderDefaultTables, initNutritionData } from "../fn/foodSearchEvents.js";
+
+import { renderSidebarPageLayout } from "../layouts/sidebarPageLayout.js";
+import { bindSidebar, bindMenuListToggle } from "../fn/sidebarEvents.js";
+
+import { renderPageLayout } from "../layouts/pageLayout.js";
+import { renderNotification } from "../layouts/notificationLayout.js";
+
+import { renderSearchFoodName } from "../components/searchFoodNameSidebar.js";
+import { renderSearchSettings } from "../components/searchSettingsSidebar.js";
+import { renderFoodGroupList } from "../components/searchFoodGroupListSidebar.js";
+
 export async function renderSearchPage() {
   const app = document.getElementById("app");
 
-  app.innerHTML = `
-    <div class="box">
-      <h2 class="title is-4">Search Food</h2>
-      <input
-        id="food-search"
-        class="input mb-4"
-        type="search"
-        placeholder="Search English or Mongolian food name..."
-      />
-      <p id="food-count" class="mb-3">Loading data...</p>
-      <ul id="food-results"></ul>
-    </div>
-  `;
+  app.innerHTML = renderPageLayout({
+    content: renderNotification("Loading data..."),
+  });
 
   try {
-    const nutritions = await getNutritions();
+    // JSON өгөгдлийг нэг л удаа татна
+    const nutritionData = await getNutritions();
 
-    const searchInput = document.getElementById("food-search");
-    const foodCount = document.getElementById("food-count");
-    const foodResults = document.getElementById("food-results");
+    console.log("JSON data:", nutritionData);
+    console.log("Data count:", nutritionData.length);
 
-    function displayFoods(query = "") {
-      const keyword = query.trim().toLowerCase();
+    // Өгөгдлийг хайлтын функцэд хадгална
+    initNutritionData(nutritionData);
 
-      const filtered = nutritions.filter((item) =>
-        [item.food_name, item.native_name, item.food_code, item.food_group].some((value) =>
-          String(value ?? "")
-            .toLowerCase()
-            .includes(keyword),
-        ),
-      );
+    // Хүнсний бүлгүүдийг үүсгэнэ
+    const groupedFoods = buildFoodGroups(nutritionData);
 
-      foodCount.textContent = `Showing ${filtered.length} of ${nutritions.length} foods`;
+    // Эхний хүснэгтүүдийг үүсгэнэ
+    const defaultHtml = renderDefaultTables(nutritionData);
 
-      foodResults.innerHTML = filtered.length
-        ? filtered
-            .map(
-              (item) => `
-            <li class="mb-3">
-              <strong>${item.food_name ?? "Unknown food"}</strong>
-              <br />
-              <span>${item.native_name ?? ""}</span>
-              <br />
-              <small>
-                Code: ${item.food_code ?? ""}
-                | ${item.food_group ?? ""}
-              </small>
-            </li>
-          `,
-            )
-            .join("")
-        : "<li>No matching foods found.</li>";
-    }
+    console.log("Default table HTML:", defaultHtml);
 
-    searchInput.addEventListener("input", (event) => {
-      displayFoods(event.target.value);
+    // Хуудсыг харуулна
+    app.innerHTML = renderSidebarPageLayout({
+      sidebarContent: `
+        ${renderSearchFoodName()}
+        ${renderSearchSettings()}
+        ${renderFoodGroupList(groupedFoods)}
+      `,
+      pageId: "search",
+      pageTitle: "Food Composition Database",
+      mainContent: `
+        <div id="resultTbl">
+          ${defaultHtml}
+        </div>
+      `,
     });
 
-    displayFoods();
+    bindSidebar();
+    bindMenuListToggle();
+    bindSearchEvents();
   } catch (error) {
     console.error("Failed to load nutrition data:", error);
 
-    app.innerHTML = `
-      <div class="box">
-        <h2 class="title is-4">Search Food</h2>
-        <p class="has-text-danger">
-          Failed to load food data.
-        </p>
-        <p>${error.message}</p>
-      </div>
-    `;
+    app.innerHTML = renderPageLayout({
+      content: renderNotification("Failed to load nutrition data. Please check the console.", "danger"),
+    });
   }
 }
