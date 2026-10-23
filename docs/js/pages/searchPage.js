@@ -1,8 +1,13 @@
-import { getNutritions } from "../services/nutritionService.js";
+import { getNutritions } from "../services/nutritionService.js"; // Хоолны шим тэжээлийн өгөгдлийг авна.
+import {
+  buildFoodGroups,
+  bindSearchEvents,
+  renderDefaultTables,
+  initNutritionData,
+  applyPendingSelectedFoodsFromOverview,
+} from "../fn/foodSearchEvents.js"; // food_group бүрээр багцалсан food_code, food_name-үүдийг авна. Жишээ нь: "Cereals and Cereal products" → [{ food_code: "01_0106", food_name: "Barley flour, whole grain" }, ...]
 
-import { buildFoodGroups, bindSearchEvents, renderDefaultTables, initNutritionData } from "../fn/foodSearchEvents.js";
-
-import { renderSidebarPageLayout } from "../layouts/sidebarPageLayout.js";
+import { renderSidebarPageLayout } from "../layouts/sidebarPageLayout.js"; // Sidebar-тай хуудасны layout-г үүсгэх
 import { bindSidebar, bindMenuListToggle } from "../fn/sidebarEvents.js";
 
 import { renderPageLayout } from "../layouts/pageLayout.js";
@@ -22,68 +27,42 @@ let imageModalBound = false;
 export async function renderSearchPage() {
   const app = document.getElementById("app");
 
-  if (!app) {
-    console.log("LOADED: searchFoodGroupListSidebar", import.meta.url);
-    console.error('Элемент "#app" олдсонгүй.');
-    return;
-  }
-
-  // Өгөгдөл ачаалж байх үеийн мэдээлэл
   app.innerHTML = renderPageLayout({
     content: renderNotification(t("notification.loadingData")),
   });
 
   try {
-    // 1. Хүнсний найрлагын өгөгдөл ачаална
-    const nutritionData = await getNutritions();
-
-    if (!Array.isArray(nutritionData)) {
-      throw new Error("Хүнсний өгөгдөл массив хэлбэртэй биш байна.");
-    }
-
-    // 2. Хүнсний зургийн өгөгдөл ачаална
-    await loadImages();
-
-    // 3. Хайлтын өгөгдлийг тохируулна
+    const nutritionData = await getNutritions(); // Хүнсний найрлагын JSON өгөгдүүдлийг авна.
+    await loadImages(); // Зургийн JSON өгөгдлийг ачаална.
     initNutritionData(nutritionData);
+    const groupedFoods = buildFoodGroups(nutritionData); // food_group бүрээр багцалсан food_code, food_name-үүдийг авна. Жишээ нь: "Cereals and Cereal products" → [{ food_code: "01_0106", food_name: "Barley flour, whole grain" }, ...]
 
-    // 4. Хүнсийг бүлгээр ангилна
-    const groupedFoods = buildFoodGroups(nutritionData);
-
-    // 5. Хажуугийн цэс болон үндсэн хүснэгтийг зурна
     app.innerHTML =
       renderSidebarPageLayout({
-        sidebarContent: `
-          ${renderSearchFoodName()}
-          ${renderSearchSettings()}
-          ${renderFoodGroupList(groupedFoods)}
-        `,
+        sidebarContent: `${renderSearchFoodName()} ${renderSearchSettings()} ${renderFoodGroupList(groupedFoods)}`,
         pageId: "search",
         pageTitle: t("searchPage.title"),
         mainContent: `
-          <div id="resultTbl">
-            ${renderDefaultTables(nutritionData)}
-          </div>
-        `,
+      <div id="resultTbl">
+        ${renderDefaultTables(nutritionData)}
+      </div>
+    `,
       }) + renderImageModal();
 
-    // 6. Хажуугийн цэсийн үйлдлүүд
     bindSidebar();
     bindMenuListToggle();
-
-    // 7. Хайлтын үйлдлүүд
     bindSearchEvents();
 
-    // 8. Зургийн modal үйлдлийг давхар холбохгүй
     if (!imageModalBound) {
       bindImageModalEvents();
       imageModalBound = true;
     }
-  } catch (error) {
-    console.error("Хүнсний өгөгдөл ачаалахад алдаа гарлаа:", error);
 
+    applyPendingSelectedFoodsFromOverview(); // Overview page-аас шилжихдээ хайх үгийг хадгалсан бол тэр үгээр хайх үйлдлийг автоматаар хийх функц
+  } catch (error) {
     app.innerHTML = renderPageLayout({
       content: renderNotification(t("notification.failedToLoadNutritionData"), "danger"),
     });
+    console.error("Failed to load nutrition data:", error);
   }
 }
