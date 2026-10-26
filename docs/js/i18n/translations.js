@@ -10,12 +10,41 @@ export const translations = {
       brandSpan: "Монголын",
       brand: "хүнсний найрлагын мэдээллийн сан",
     },
+
     overview: {
       title: "Мэдээллийн сангийн танилцуулга",
     },
-    searchPage: {
+
+    search: {
       title: "Хүнс хайх",
     },
+
+    calculation: {
+      title: "Хүнсний тооцоолол",
+      welcome:
+        "Хүнсний бүтээгдэхүүн сонгож, шим тэжээлийн тооцоолол хийнэ үү.",
+
+      macroTitle: "Хүнсээр авах илчлэг ба үндсэн шимт бодис",
+      microTitle: "Хүнсээр авах амин дэм ба эрдэс бодис",
+
+      amount: "Хэмжээ",
+      total: "Нийт",
+      percentRequirement: "Өдөрт авах хэрэгцээний хувь",
+
+      selectedAmount:
+        "<strong>Сонгосон хэмжээнд үндэслэсэн шим тэжээлийн агууламж (г)</strong><br>Жагсаалтаас хүнсний бүтээгдэхүүн сонгож, хэрэглэх хэмжээг (граммаар) оруулна. Хүснэгт нь сонгосон хэмжээнд үндэслэн илчлэг, үндсэн шимт бодис, амин дэм болон эрдэс бодисын хэмжээг тооцоолон харуулна. Үүнд:<br><br><strong>Илчлэгийн тооцоо (ккал)</strong><br><code>Илчлэг = (Уураг × 4) + (Өөх тос × 9) + (Нүүрс ус × 4)</code><br>Илчлэгийг уураг, өөх тос, нүүрс усны стандарт хөрвүүлэх коэффициентоор тооцоолно.",
+
+      dailyRequirement:
+        "<strong>Өдөрт авах хэрэгцээний хэдэн хувь вэ?</strong><br>Хүснэгтийн доод хэсгээс Нас болон Хүйс-ийг сонгосноор илчлэг, үндсэн шимт бодис, амин дэм болон эрдэс бодисын өдөрт авах зөвлөмж хэмжээг тооцоолж, сонгосон хүнс тухайн хэрэгцээний хэдэн хувийг хангаж байгааг харуулна. Энэхүү тооцоолол нь дараах эх сурвалжид үндэслэнэ:<br><br>Эрүүл мэндийн сайдын 2017 оны А/74 дүгээр тушаалын хавсралтад заасан хоногийн хэрэгцээт шимт бодисын зөвлөмж хэмжээг ашигласан.",
+    },
+
+    form: {
+      age: "Нас",
+      gender: "Хүйс",
+      male: "Эрэгтэй",
+      female: "Эмэгтэй",
+    },
+
     sidebar: {
       searchByFoodName: "Хүнсний нэрээр хайх",
       foodName: "Хүнсний нэр",
@@ -35,6 +64,7 @@ export const translations = {
 
       searchByFoodGroups: "Хүнсний бүлгээр хайх",
     },
+
     table: {
       foodName: "Хүнсний нэр",
       foodGroup: "Хүнсний бүлэг",
@@ -50,15 +80,21 @@ export const translations = {
       "Basis of sample selection": "Сонгосон үндэслэл",
       "Additional collection information": "Нэмэлт мэдээлэл",
 
-      "Weight of whole part (g/1 piece)": "Бүтэн хэсгийн жин (г/1ш)",
-      "Weight of edible part (g/1 piece)": "Идэх хэсгийн жин (г/1ш)",
+      "Weight of whole part (g/1 piece)":
+        "Бүтэн хэсгийн жин (г/1ш)",
+      "Weight of edible part (g/1 piece)":
+        "Идэх хэсгийн жин (г/1ш)",
       "Inedible part (discarded part)": "Идэхгүй хэсэг",
-      "Weight of inedible part (g/1 piece)": "Идэхгүй хэсгийн жин (г/1ш)",
+      "Weight of inedible part (g/1 piece)":
+        "Идэхгүй хэсгийн жин (г/1ш)",
 
       "Cooking (processing) method": "Боловсруулах арга",
-      "Other cooking (processing) conditions": "Бусад боловсруулах нөхцөл",
-      "Reference for condition setting": "Нөхцөл тогтоосон үндэслэл",
+      "Other cooking (processing) conditions":
+        "Бусад боловсруулах нөхцөл",
+      "Reference for condition setting":
+        "Нөхцөл тогтоосон үндэслэл",
     },
+
     nutrients: {
       "Energy (kcal)": "Илчлэг (ккал)",
       "Water (g)": "Ус (г)",
@@ -79,14 +115,18 @@ export const translations = {
       "Vitamin C (mg)": "С витамин (мг)",
       "Refuse (%)": "Хаягдал (%)",
     },
+
     notification: {
       noMatchFound: "Илэрц олдсонгүй.",
-      selectAtLeastOneCategory: "Ядаж нэг шим тэжээлийн ангилал сонгоно уу.",
+      selectAtLeastOneCategory:
+        "Ядаж нэг шим тэжээлийн ангилал сонгоно уу.",
       enterFoodName: "Хүнсний нэр оруулна уу",
       loadingData: "Өгөгдөл ачаалж байна...",
-      failedToLoadNutritionData: "Хүнсний найрлагын өгөгдөл ачаалахад алдаа гарлаа.",
+      failedToLoadNutritionData:
+        "Хүнсний найрлагын өгөгдөл ачаалахад алдаа гарлаа.",
       noFoodData: "Энэ аймагт хоолны мэдээлэл олдсонгүй.",
     },
+
     modal: {
       clear: "Арилгах",
       selectAll: "Бүгдийг сонгох",
@@ -97,6 +137,7 @@ export const translations = {
       informationWillAppear: "Мэдээлэл энд харагдана.",
     },
   },
+
   en: {
     nav: {
       overview: "Overview",
@@ -108,12 +149,43 @@ export const translations = {
       brandSpan: "Mongolian",
       brand: "Food Composition Database",
     },
+
     overview: {
       title: "Food Composition Database Introduction",
     },
-    searchPage: {
+
+    search: {
       title: "Food search",
     },
+
+    calculation: {
+      title: "Food calculation",
+      welcome:
+        "Select a food product to calculate its nutrient content.",
+
+      macroTitle:
+        "Recommended Daily Energy and Macronutrient Intake from Food",
+      microTitle:
+        "Recommended Daily Vitamin and Mineral Intake from Food",
+
+      amount: "Amount",
+      total: "Total",
+      percentRequirement: "% of requirement",
+
+      selectedAmount:
+        "<strong>Nutrient Intake Based on Selected Amount (g)</strong><br>Select food items from the list and enter the desired amount (in grams). The table will calculate the corresponding energy, macronutrients, vitamins, and minerals based on the selected amount. This includes:<br><br><strong>Energy Calculation (kcal)</strong><br><code>Energy = (Protein × 4) + (Fat × 9) + (Carbohydrate × 4)</code><br>Energy is calculated from protein, fat, and carbohydrates using standard conversion factors.",
+
+      dailyRequirement:
+        "<strong>What Percentage of Daily Requirement?</strong><br>In the table footer, select Age and Gender to calculate the recommended daily intake of energy, macronutrients, vitamins, and minerals. This shows the percentage of the daily requirement provided by the selected food.<br><br>The calculation is based on the recommended daily nutrient intake values specified in the appendix of Order No. A/74 (2017), issued by the Minister of Health.",
+    },
+
+    form: {
+      age: "Age",
+      gender: "Gender",
+      male: "Male",
+      female: "Female",
+    },
+
     sidebar: {
       searchByFoodName: "Search by food name",
       foodName: "Food name",
@@ -133,6 +205,7 @@ export const translations = {
 
       searchByFoodGroups: "Search by food groups",
     },
+
     table: {
       foodName: "Food name",
       foodGroup: "Food group",
@@ -146,17 +219,25 @@ export const translations = {
       "Collection area": "Collection area",
       "Collection date": "Collection date",
       "Basis of sample selection": "Basis of sample selection",
-      "Additional collection information": "Additional collection information",
+      "Additional collection information":
+        "Additional collection information",
 
-      "Weight of whole part (g/1 piece)": "Weight of whole part (g/1 piece)",
-      "Weight of edible part (g/1 piece)": "Weight of edible part (g/1 piece)",
-      "Inedible part (discarded part)": "Inedible part (discarded part)",
-      "Weight of inedible part (g/1 piece)": "Weight of inedible part (g/1 piece)",
+      "Weight of whole part (g/1 piece)":
+        "Weight of whole part (g/1 piece)",
+      "Weight of edible part (g/1 piece)":
+        "Weight of edible part (g/1 piece)",
+      "Inedible part (discarded part)":
+        "Inedible part (discarded part)",
+      "Weight of inedible part (g/1 piece)":
+        "Weight of inedible part (g/1 piece)",
 
       "Cooking (processing) method": "Cooking (processing) method",
-      "Other cooking (processing) conditions": "Other cooking (processing) conditions",
-      "Reference for condition setting": "Reference for condition setting",
+      "Other cooking (processing) conditions":
+        "Other cooking (processing) conditions",
+      "Reference for condition setting":
+        "Reference for condition setting",
     },
+
     nutrients: {
       "Energy (kcal)": "Energy (kcal)",
       "Water (g)": "Water (g)",
@@ -177,14 +258,18 @@ export const translations = {
       "Vitamin C (mg)": "Vitamin C (mg)",
       "Refuse (%)": "Refuse (%)",
     },
+
     notification: {
       noMatchFound: "No match found.",
-      selectAtLeastOneCategory: "Please select at least one nutrition category.",
+      selectAtLeastOneCategory:
+        "Please select at least one nutrition category.",
       enterFoodName: "Please enter a food name.",
       loadingData: "Loading data...",
       failedToLoadNutritionData: "Failed to load nutrition data.",
       noFoodData: "No food data found for this province.",
+      selectedAmount: "Selected amount",
     },
+
     modal: {
       clear: "Clear",
       selectAll: "Select All",

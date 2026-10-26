@@ -6,7 +6,9 @@ export function renderCalculationPage() {
     id: "calculation",
     title: t("calculation.title"),
     content: `
-      <p>${t("calculation.welcome")}</p>
+      <div class="calculation-page">
+        <p>${t("calculation.welcome")}</p>
+      </div>
     `,
   });
 }

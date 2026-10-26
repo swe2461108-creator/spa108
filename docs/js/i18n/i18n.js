@@ -1,15 +1,28 @@
+
 import { translations } from "./translations.js";
 
 const DEFAULT_LANGUAGE = "mn";
+const SUPPORTED_LANGUAGES = Object.keys(translations);
 
+// Одоогийн хэлийг авах
 export function getCurrentLanguage() {
-  return localStorage.getItem("language") || DEFAULT_LANGUAGE;
+  const savedLanguage = localStorage.getItem("language");
+
+  return SUPPORTED_LANGUAGES.includes(savedLanguage)
+    ? savedLanguage
+    : DEFAULT_LANGUAGE;
 }
 
+// Хэл солих
 export function setLanguage(language) {
+  if (!SUPPORTED_LANGUAGES.includes(language)) {
+    return;
+  }
+
   localStorage.setItem("language", language);
 }
 
+// Орчуулгын түлхүүрээр текст авах
 export function t(path) {
   const language = getCurrentLanguage();
   const keys = path.split(".");
@@ -23,55 +36,72 @@ export function t(path) {
   return value ?? path;
 }
 
+// Хэлийг дараагийн хэл рүү солих
 export function toggleLanguage() {
+  const languages = SUPPORTED_LANGUAGES;
+
+  if (languages.length === 0) {
+    return DEFAULT_LANGUAGE;
+  }
+
   const current = getCurrentLanguage();
-  const next = current === "mn" ? "en" : "mn";
+  const index = languages.indexOf(current);
+  const next = languages[(index + 1) % languages.length];
+
   setLanguage(next);
+
   return next;
 }
 
-/* { en, mn } бүтэцтэй өгөгдлөөс одоогийн хэлний утгыг авна.
-   Давхар үүрсэн бүтцийг ч дэмжинэ:
-   { en: { en: "Barley flour", mn: "Арвайн гурил" }, mn: "" } */
+// Монгол, англи зэрэг хэлний утгаас тохирохыг авах
 export function getLocalizedValue(value, fallback = "") {
   const language = getCurrentLanguage();
 
-  if (value == null) return fallback;
+  if (value == null) {
+    return fallback;
+  }
 
   if (typeof value === "object" && !Array.isArray(value)) {
-    // {en,mn} бүтэц (давхар үүрсэн байж болно)
+    // { en: "...", mn: "..." } бүтэц
     if ("en" in value || "mn" in value) {
       const picked = value[language] || value.en || value.mn;
-      return picked ? getLocalizedValue(picked, fallback) : fallback;
+
+      return picked != null && picked !== ""
+        ? getLocalizedValue(picked, fallback)
+        : fallback;
     }
 
-    // Энгийн object бол бүх value-г давтаж хөрвүүлнэ
-    return Object.fromEntries(Object.entries(value).map(([key, val]) => [key, getLocalizedValue(val, fallback)]));
+    // Энгийн объектын утгуудыг боловсруулах
+    return Object.fromEntries(
+      Object.entries(value).map(([key, val]) => [
+        key,
+        getLocalizedValue(val, fallback),
+      ])
+    );
   }
 
   return value;
 }
 
+// Огноог одоогийн хэлэнд тохируулан харуулах
 export function formatDate(dateString) {
-  if (!dateString) return "";
+  if (!dateString) {
+    return "";
+  }
 
   const language = getCurrentLanguage();
+  const parts = String(dateString).split(/[.-]/);
 
-  let day, month, year;
+  let day;
+  let month;
+  let year;
 
-  const parts = dateString.split(/[.-]/);
-
-  if (parts.length !== 3) {
-    return dateString;
-  }
-
-  // yyyy.mm.dd
-  if (parts[0].length === 4) {
+  // yyyy.mm.dd бүтэц
+  if (parts.length === 3 && parts[0].length === 4) {
     [year, month, day] = parts;
   }
-
-  // dd.mm.yyyy
-  else if (parts[2].length === 4) {
+  // dd.mm.yyyy бүтэц
+  else if (parts.length === 3 && parts[2].length === 4) {
     [day, month, year] = parts;
   } else {
     return dateString;
@@ -84,7 +114,15 @@ export function formatDate(dateString) {
     return `${year}.${month}.${day}`;
   }
 
-  const date = new Date(year, month - 1, day);
+  const date = new Date(
+    Number(year),
+    Number(month) - 1,
+    Number(day)
+  );
+
+  if (Number.isNaN(date.getTime())) {
+    return dateString;
+  }
 
   return new Intl.DateTimeFormat("en-US", {
     year: "numeric",
